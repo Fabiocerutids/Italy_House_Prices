@@ -1,0 +1,4 @@
+data/
+housing_env/
+access_token.py
+__pycache__/
