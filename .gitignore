@@ -1,4 +1,6 @@
 data/
-housing_env/
+house_env/
 access_token.py
 __pycache__/
+test.ipynb
+artifacts/
