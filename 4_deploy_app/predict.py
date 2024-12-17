@@ -19,9 +19,12 @@ def _add_population(df):
     abitanti.rename({'DESCRIZIONE COMUNE':'citta', 'POPOLAZIONE CENSITA TOTALE':'popolazione'}, axis=1, inplace=True)
     abitanti['popolazione']=abitanti['popolazione'].str.replace('.','').astype(int)
     df['citta'] = df['citta'].map(unidecode).str.replace("'","").map(fix_citta).str.lower()
-    df = pd.merge(df, abitanti[['citta', 'popolazione']], how='left', on='citta')
-    df.loc[df['popolazione'].isna(), 'popolazione']=-1
-    return df
+    if df[df['citta'].isin(abitanti['citta'])].shape[0]>0:
+        df = pd.merge(df, abitanti[['citta', 'popolazione']], how='left', on='citta')
+        df.loc[df['popolazione'].isna(), 'popolazione']=-1
+        return df
+    else:
+        return -1
 
 def _add_reddito(df):
     reddito = pd.read_csv('feature_data/reddito_by_regione.csv')
@@ -31,8 +34,11 @@ def _add_reddito(df):
     reddito.loc[reddito['regione']=="valle d'aosta / vallée d'aoste", 'regione'] = 'valle-d-aosta'
     reddito.loc[reddito['regione']=="provincia autonoma bolzano / bozen", 'regione'] = 'trentino-alto-adige'
     reddito.loc[reddito['regione']=="friuli-venezia giulia", 'regione'] = 'friuli-venezia-giulia'
-    df = pd.merge(df, reddito, how='left', on='regione')
-    return df
+    if df[df['regione'].isin(reddito['regione'])].shape[0]>0:
+        df = pd.merge(df, reddito, how='left', on='regione')
+        return df
+    else:
+        return -1
 
 def predict_new_data(input_data):
     test_data = pd.DataFrame(input_data, index=[0])
@@ -46,8 +52,12 @@ def predict_new_data(input_data):
     test_data[categorical_features] = categorical_encoder.transform(test_data[categorical_features])
       
     #Load Model
-    with open('artifacts/lightgbm_regressor.pkl', 'rb') as f:
-        model = pickle.load(f)
+    with open('artifacts/model_05.pkl', 'rb') as f:
+        model_05 = pickle.load(f)
+    with open('artifacts/model_50.pkl', 'rb') as f:
+        model_50 = pickle.load(f)
+    with open('artifacts/model_95.pkl', 'rb') as f:
+        model_95 = pickle.load(f)
 
     features = ['bagni','stanze','piano','m2','disponibilità','locali','delta_pubblicazione','totale_piani','ascensore','cucina',
                 'camere','tipologia_casa','classe_casa','tipologia_proprietà','n posti auto','box privato','balcone','impianto tv singolo',
@@ -55,4 +65,7 @@ def predict_new_data(input_data):
                 'portiere','piscina_idromassaggio','videocitofono','cancello elettrico','fibra ottica','armadio a muro','impianto tv centralizzato',
                 'mansarda','giardino','infissi','popolazione','reddito mediano']
     
-    return round(model.predict(test_data[features])[0])
+    q_05_lightgbm_pred = model_05.predict(test_data[features])
+    q_50_lightgbm_pred = model_50.predict(test_data[features])
+    q_95_lightgbm_pred = model_95.predict(test_data[features])
+    return round(q_05_lightgbm_pred[0]), round(q_50_lightgbm_pred[0]), round(q_95_lightgbm_pred[0])
