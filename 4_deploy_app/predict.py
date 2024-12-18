@@ -48,7 +48,7 @@ def predict_new_data(input_data):
     #Load Encoder
     with open('artifacts/categorical_encoder.pkl', 'rb') as f:
         categorical_encoder = pickle.load(f)
-    categorical_features = ['bagni','stanze','disponibilità','locali','cucina','tipologia_casa','classe_casa','tipologia_proprietà', 'giardino','infissi']
+    categorical_features = ['bagni','stanze','disponibilità','cucina','tipologia_casa','classe_casa','tipologia_proprietà', 'giardino','infissi']
     test_data[categorical_features] = categorical_encoder.transform(test_data[categorical_features])
       
     #Load Model
@@ -59,7 +59,7 @@ def predict_new_data(input_data):
     with open('artifacts/model_95.pkl', 'rb') as f:
         model_95 = pickle.load(f)
 
-    features = ['bagni','stanze','piano','m2','disponibilità','locali','delta_pubblicazione','totale_piani','ascensore','cucina',
+    features = ['bagni','stanze','piano','m2','disponibilità','delta_pubblicazione','totale_piani','ascensore','cucina',
                 'camere','tipologia_casa','classe_casa','tipologia_proprietà','n posti auto','box privato','balcone','impianto tv singolo',
                 'porta blindata','parzialmente arredato','cantina','esposizione doppia','arredato','caminetto','terrazza','impianto di allarme',
                 'portiere','piscina_idromassaggio','videocitofono','cancello elettrico','fibra ottica','armadio a muro','impianto tv centralizzato',

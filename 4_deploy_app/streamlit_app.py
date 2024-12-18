@@ -15,11 +15,11 @@ st.markdown('''
 
 new_input_dict = {}
 
-new_input_dict['bagni'] = st.pills('Bathrooms', ['1', '2', '3', '3+'])
-new_input_dict['stanze'] = st.pills('Bedrooms', ['1', '2', '3', '4', '5', '5+'])
-new_input_dict['camere'] = int(new_input_dict['stanze'])  
-new_input_dict['disponibilità'] = st.pills('Availability', ['Libero', 'Futuro', 'missing'])
-new_input_dict['locali'] = st.pills('Rooms', ['1', '2', '3', '4', '5', '5+'], key='Rooms')
+new_input_dict['bagni'] = st.pills('Bagni', ['1', '2', '3', '3+'])
+new_input_dict['stanze'] = st.pills("Locali dell'abitazione", ['monolocale', 'bilocale', 'trilocale', 'quadrilocale', 'pentalocale', '> pentalocale'])
+new_input_dict['camere'] = st.number_input("Camere da letto", min_value=1)
+new_input_dict['disponibilità'] = st.pills('Disponibilità', ['Libero', 'Futuro', 'Sconosciuta'])
+new_input_dict['disponibilità'] = 'missing' if new_input_dict['disponibilità']=='Sconosciuta' else new_input_dict['disponibilità']
 new_input_dict['cucina'] = st.pills('Kitchen',['cucina abitabile', 'cucina semi abitabile','cucina angolo cottura', 'cucina a vista', 'no info','cucina cucinotto'])
 new_input_dict['tipologia_casa'] = st.selectbox('House Type', ['Appartamento','Appartamento in villa','Attico','Baglio','Baita','Casa colonica','Casale','Cascina','Chalet','Dammuso','Loft','Mansarda','Open space','Palazzo - Edificio','Rustico','Sasso','Terratetto plurifamiliare','Terratetto unifamiliare','Villa a schiera','Villa bifamiliare','Villa plurifamiliare','Villa unifamiliare']) 
 new_input_dict['classe_casa'] = st.pills('House Class', ['Classe immobile economica','Classe immobile media','Classe immobile signorile','Immobile di lusso','Sconosciuta'])
@@ -27,7 +27,7 @@ new_input_dict['classe_casa'] = 'missing' if new_input_dict['classe_casa']=='Sco
 new_input_dict['tipologia_proprietà'] = st.pills('Property Type', ['Diritto di superficie','Intera proprietà','Multiproprietà','Nuda proprietà','Parziale proprietà','Sconosciuta'])
 new_input_dict['tipologia_proprietà'] = 'missing' if new_input_dict['tipologia_proprietà']=='Sconosciuta' else new_input_dict['tipologia_proprietà']
 new_input_dict['giardino'] = st.pills('Giardino', ['comune','privato','assente'])
-new_input_dict['giardino'] = 'Missing' if new_input_dict['giardino']=='assente' else new_input_dict['giardino']
+new_input_dict['giardino'] = 'missing' if new_input_dict['giardino']=='assente' else new_input_dict['giardino']
 new_input_dict['infissi'] = st.pills('Tipologia Infissi', ['singolo','doppio','triplo', 'sconosciuto'])
 new_input_dict['infissi'] = 'missing' if new_input_dict['infissi']=='sconosciuto' else new_input_dict['infissi']
 new_input_dict['piano'] = st.number_input('Piano (digitare -1 se non applicabile o sconosciuto)', min_value=-1)
@@ -87,9 +87,9 @@ if st.button('Consigliami il prezzo della proprietà'):
     headers = {"Content-Type": "application/json"}
     resp = requests.post(docker_url, input_data, headers=headers)
     price_prediction = json.loads(resp.text)
-    q05 = '{:,}'.format(price_prediction['Q05'])
-    q50 = '{:,}'.format(price_prediction['Q50'])
-    q95 = '{:,}'.format(price_prediction['Q95'])
+    q05 = '{:,}'.format(round(price_prediction['Q05']/1000)*1000)
+    q50 = '{:,}'.format(round(price_prediction['Q50']/1000)*1000)
+    q95 = '{:,}'.format(round(price_prediction['Q95']/1000)*1000)
     st.markdown(f'''
                 Per la proprietà data in input, stimo con confidenza al 90% un range di prezzo compreso tra **{q05}€** e **{q95}€**.
                 
