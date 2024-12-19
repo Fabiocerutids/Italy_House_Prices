@@ -31,3 +31,9 @@ The folder contains the relevant files to create a working Docker container and 
 - predict.py: contains the relevant code to translate raw data into house price predictions.
 
 - streamlit_app.py: creates the streamlit front-end application to collect data and produce house price predictions.
+
+# Demo Video
+Find below a demo of the final application developed.
+
+https://github.com/user-attachments/assets/483362d3-328a-49f0-88c7-a5c7dbb64025
+
