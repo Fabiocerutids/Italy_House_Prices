@@ -63,7 +63,8 @@ def predict_new_data(input_data):
                 'camere','tipologia_casa','classe_casa','tipologia_proprietà','n posti auto','box privato','balcone','impianto tv singolo',
                 'porta blindata','parzialmente arredato','cantina','esposizione doppia','arredato','caminetto','terrazza','impianto di allarme',
                 'portiere','piscina_idromassaggio','videocitofono','cancello elettrico','fibra ottica','armadio a muro','impianto tv centralizzato',
-                'mansarda','giardino','infissi','popolazione','reddito mediano']
+                'mansarda','giardino','infissi','popolazione','reddito mediano', 'da ristrutturare', 'ristrutturato','ben collegato','lavanderia',
+                'ripostiglio','bagno finestrato','luminoso','parquet','aria condizionata','parchi e verde','ultimo']
     
     q_05_lightgbm_pred = model_05.predict(test_data[features])
     q_50_lightgbm_pred = model_50.predict(test_data[features])

@@ -7,24 +7,26 @@ docker_url = "http://localhost:5000/predict"
 df = pd.read_csv('../data/feature_data/map_comuni_regioni.csv')
 
 st.markdown('''
-    # Welcome to your Price Prediction Assistant!
-    Through the graphic interface below, you can provide information on your house and I will predict what its selling price should be!
+    # Benvenuto al tuo assistente immobiliare!
+    Tramite l'interfaccia sottostante, potrai indicarmi le informazioni di una proprietà immobiliare e ti consiglierò un range con confidenza al 90%
+    sul valore di essa. Inoltre, provvederò anche a fornirti una stima puntuale sul suo valore.
     
-    *Note: My predictions are not 100% accurate so always take them with a grain of salt* 
+    *Nota: Le mie previsioni non hanno un'accuratezza del 100%, considerale come indicative* 
     ''')
 
 new_input_dict = {}
-
+                
+                
 new_input_dict['bagni'] = st.pills('Bagni', ['1', '2', '3', '3+'])
-new_input_dict['stanze'] = st.pills("Locali dell'abitazione", ['monolocale', 'bilocale', 'trilocale', 'quadrilocale', 'pentalocale', '> pentalocale'])
+new_input_dict['stanze'] = st.pills("Locali dell'abitazione", ['monolocale', 'bilocale', 'trilocale', 'quadrilocale', 'pentalocale', 'oltre pentalocale'])
 new_input_dict['camere'] = st.number_input("Camere da letto", min_value=1)
 new_input_dict['disponibilità'] = st.pills('Disponibilità', ['Libero', 'Futuro', 'Sconosciuta'])
 new_input_dict['disponibilità'] = 'missing' if new_input_dict['disponibilità']=='Sconosciuta' else new_input_dict['disponibilità']
-new_input_dict['cucina'] = st.pills('Kitchen',['cucina abitabile', 'cucina semi abitabile','cucina angolo cottura', 'cucina a vista', 'no info','cucina cucinotto'])
-new_input_dict['tipologia_casa'] = st.selectbox('House Type', ['Appartamento','Appartamento in villa','Attico','Baglio','Baita','Casa colonica','Casale','Cascina','Chalet','Dammuso','Loft','Mansarda','Open space','Palazzo - Edificio','Rustico','Sasso','Terratetto plurifamiliare','Terratetto unifamiliare','Villa a schiera','Villa bifamiliare','Villa plurifamiliare','Villa unifamiliare']) 
-new_input_dict['classe_casa'] = st.pills('House Class', ['Classe immobile economica','Classe immobile media','Classe immobile signorile','Immobile di lusso','Sconosciuta'])
+new_input_dict['cucina'] = st.pills('Tipologia cucina',['cucina abitabile', 'cucina semi abitabile','cucina angolo cottura', 'cucina a vista', 'no info','cucina cucinotto'])
+new_input_dict['tipologia_casa'] = st.selectbox('Tipologia abitazione', ['Appartamento','Appartamento in villa','Attico','Baglio','Baita','Casa colonica','Casale','Cascina','Chalet','Dammuso','Loft','Mansarda','Open space','Palazzo - Edificio','Rustico','Sasso','Terratetto plurifamiliare','Terratetto unifamiliare','Villa a schiera','Villa bifamiliare','Villa plurifamiliare','Villa unifamiliare']) 
+new_input_dict['classe_casa'] = st.pills('Classe immobiliare', ['Classe immobile economica','Classe immobile media','Classe immobile signorile','Immobile di lusso','Sconosciuta'])
 new_input_dict['classe_casa'] = 'missing' if new_input_dict['classe_casa']=='Sconosciuta' else new_input_dict['classe_casa']
-new_input_dict['tipologia_proprietà'] = st.pills('Property Type', ['Diritto di superficie','Intera proprietà','Multiproprietà','Nuda proprietà','Parziale proprietà','Sconosciuta'])
+new_input_dict['tipologia_proprietà'] = st.pills('Tipologia di proprietà', ['Diritto di superficie','Intera proprietà','Multiproprietà','Nuda proprietà','Parziale proprietà','Sconosciuta'])
 new_input_dict['tipologia_proprietà'] = 'missing' if new_input_dict['tipologia_proprietà']=='Sconosciuta' else new_input_dict['tipologia_proprietà']
 new_input_dict['giardino'] = st.pills('Giardino', ['comune','privato','assente'])
 new_input_dict['giardino'] = 'missing' if new_input_dict['giardino']=='assente' else new_input_dict['giardino']
@@ -77,6 +79,28 @@ new_input_dict['portiere'] = st.radio('Portiere', ['Presente', 'Assente'])
 new_input_dict['portiere'] = True if new_input_dict['portiere']=='Presente' else False
 new_input_dict['piscina_idromassaggio'] = st.radio('Piscina o Idromassaggio', ['Presente', 'Assente'])
 new_input_dict['piscina_idromassaggio'] = True if new_input_dict['piscina_idromassaggio']=='Presente' else False
+new_input_dict['da ristrutturare'] = st.radio("L'abitazione è da ristrutturare?", ['Sì', 'No'])
+new_input_dict['da ristrutturare'] = True if new_input_dict['da ristrutturare']=='Sì' else False
+new_input_dict['ristrutturato'] = st.radio("L'abitazione risulta ristrutturata?", ['Sì', 'No'])
+new_input_dict['ristrutturato'] = True if new_input_dict['ristrutturato']=='Sì' else False
+new_input_dict['ben collegato'] = st.radio('Ben collegato', ['Sì', 'No'])
+new_input_dict['ben collegato'] = True if new_input_dict['ben collegato']=='Sì' else False
+new_input_dict['lavanderia'] = st.radio('Lavanderia', ['Presente', 'Assente'])
+new_input_dict['lavanderia'] = True if new_input_dict['lavanderia']=='Presente' else False
+new_input_dict['ripostiglio'] = st.radio('Ripostiglio', ['Presente', 'Assente'])
+new_input_dict['ripostiglio'] = True if new_input_dict['ripostiglio']=='Presente' else False
+new_input_dict['bagno finestrato'] = st.radio('Bagno Finestrato', ['Presente', 'Assente'])
+new_input_dict['bagno finestrato'] = True if new_input_dict['bagno finestrato']=='Presente' else False
+new_input_dict['luminoso'] = st.radio("L'abitazione è luminosa", ['Sì', 'No'])
+new_input_dict['luminoso'] = True if new_input_dict['luminoso']=='Sì' else False
+new_input_dict['parquet'] = st.radio('Parquet', ['Presente', 'Assente'])
+new_input_dict['parquet'] = True if new_input_dict['parquet']=='Presente' else False
+new_input_dict['aria condizionata'] = st.radio('Aria Condizionata', ['Presente', 'Assente'])
+new_input_dict['aria condizionata'] = True if new_input_dict['aria condizionata']=='Presente' else False
+new_input_dict['parchi e verde'] = st.radio("Sono presenti parchi e verde intorno all'abitazione?", ['Sì', 'No'])
+new_input_dict['parchi e verde'] = True if new_input_dict['parchi e verde']=='Sì' else False
+new_input_dict['ultimo'] = st.radio("La proprietà si trova all'ultimo piano", ['Sì', 'No'])
+new_input_dict['ultimo'] = True if new_input_dict['ultimo']=='Sì' else False
 
 # Convert to JSON string
 input_data = json.dumps(new_input_dict)

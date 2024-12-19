@@ -4,3 +4,5 @@ access_token.py
 __pycache__/
 test.ipynb
 artifacts/
+*.mp4
+*.tscproj
